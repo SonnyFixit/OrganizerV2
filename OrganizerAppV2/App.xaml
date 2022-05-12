@@ -1,0 +1,9 @@
+﻿<Application x:Class="OrganizerAppV2.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OrganizerAppV2"
+             StartupUri="Views/NotesWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
