@@ -5,17 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OrganizerAppV2.Views.UserControls"
              mc:Ignorable="d" 
-             Background="White"
+    
              d:DesignHeight="100" d:DesignWidth="300">
-    <Grid>
-        <TextBlock>
+    <StackPanel
+        VerticalAlignment="Center">
+        <TextBlock
             Text = "{Binding Name}"
             Foreground = "White"
-            Margin = "15"
-            FontSize = "20"
+            Margin = "25"
+            FontSize = "14"
             FontWeight = "Bold"
-            VerticalAlignments = "Center"
+            VerticalAlignment = "Center"/>
             
-        </TextBlock>
-    </Grid>
+        
+    </StackPanel>
 </UserControl>

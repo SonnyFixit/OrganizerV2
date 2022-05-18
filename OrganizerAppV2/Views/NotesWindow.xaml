@@ -37,9 +37,14 @@
         </StatusBar>
 
         <ListView DockPanel.Dock="Left"
+                  Background="DarkCyan"
                   Width="140"
+                  
                   SelectedValue="{Binding SelectedNotebook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding Notebooks}">
+
+            
+
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <uc:DisplayNotebook MyProperty="{Binding}"/>
@@ -48,11 +53,11 @@
         </ListView>
         
         <ListView DockPanel.Dock="Left"
-                  Width="140"
+                  Width="200"
                   ItemsSource="{Binding Notes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}"/>
+                    <uc:DisplayNote Note="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
