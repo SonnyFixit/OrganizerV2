@@ -37,7 +37,8 @@ namespace OrganizerAppV2.ViewModels
             get { return isVisible; }
             set
             {
-              
+
+                isVisible = value;
                 OnPropertyChanged("IsVisible");
             }
         }
