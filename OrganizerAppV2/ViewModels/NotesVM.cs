@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 using OrganizerAppV2.Models;
 using OrganizerAppV2.ViewModels.Commands;
@@ -28,18 +29,38 @@ namespace OrganizerAppV2.ViewModels
                 GetNotes();
             }
         }
+
+        private Visibility isVisible;
+
+        public Visibility IsVisible
+        {
+            get { return isVisible; }
+            set
+            {
+              
+                OnPropertyChanged("IsVisible");
+            }
+        }
+
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
 
+        public EditCommand EditCommand { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+
 
         public NotesVM()
         {
             NewNoteCommand = new NewNoteCommand(this);
             NewNotebookCommand = new NewNotebookCommand(this);
+            EditCommand = new EditCommand(this);
 
             Notebooks = new ObservableCollection<Notebook>();
             Notes = new ObservableCollection<Note>();
+
+            isVisible = Visibility.Collapsed;
 
             //Update list view with new notebooks
             GetNotebooks();
@@ -116,6 +137,11 @@ namespace OrganizerAppV2.ViewModels
         {
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void StartEditing()
+        {
+            IsVisible = Visibility.Visible;
         }
     }
 }
