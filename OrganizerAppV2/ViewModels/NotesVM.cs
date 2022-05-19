@@ -12,7 +12,7 @@ using OrganizerAppV2.ViewModels.Helpers;
 
 namespace OrganizerAppV2.ViewModels
 {
-    public class NotesVM: INotifyPropertyChanged
+    public class NotesVM : INotifyPropertyChanged
     {
         public ObservableCollection<Notebook> Notebooks { get; set; }
         public ObservableCollection<Note> Notes { get; set; }
@@ -30,6 +30,23 @@ namespace OrganizerAppV2.ViewModels
             }
         }
 
+        private Note selectedNote;
+
+        public Note SelectedNote
+        {
+            get { return selectedNote; }
+            set 
+            { 
+                selectedNote = value;
+                OnPropertyChanged("SelectedNote");
+                SelectedNoteChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
+
+
+
+
         private Visibility isVisible;
 
         public Visibility IsVisible
@@ -45,10 +62,12 @@ namespace OrganizerAppV2.ViewModels
 
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
-
         public EditCommand EditCommand { get; set; }
 
+        public StopEditingCommand StopEditingCommand {get; set;}
+
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SelectedNoteChanged;
 
 
 
@@ -57,6 +76,7 @@ namespace OrganizerAppV2.ViewModels
             NewNoteCommand = new NewNoteCommand(this);
             NewNotebookCommand = new NewNotebookCommand(this);
             EditCommand = new EditCommand(this);
+            StopEditingCommand = new StopEditingCommand(this);
 
             Notebooks = new ObservableCollection<Notebook>();
             Notes = new ObservableCollection<Note>();
@@ -143,6 +163,13 @@ namespace OrganizerAppV2.ViewModels
         public void StartEditing()
         {
             IsVisible = Visibility.Visible;
+        }
+
+        public void StopEditing(Notebook notebook)
+        {
+            IsVisible = Visibility.Collapsed;
+            DatabaseHelper.Update(notebook);
+            GetNotebooks();
         }
     }
 }

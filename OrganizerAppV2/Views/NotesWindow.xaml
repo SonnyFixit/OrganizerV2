@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:interactiv="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:OrganizerAppV2.Views"
         xmlns:vm="clr-namespace:OrganizerAppV2.ViewModels"
         xmlns:uc ="clr-namespace:OrganizerAppV2.Views.UserControls"
@@ -43,8 +44,6 @@
                   SelectedValue="{Binding SelectedNotebook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding Notebooks}">
 
-            
-
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -57,8 +56,15 @@
                         </uc:DisplayNotebook.ContextMenu>
                     </uc:DisplayNotebook>
                         <TextBox Text="{Binding Name, Mode=TwoWay}"
-                            Visibility="{Binding Source={StaticResource vm}, Path=IsVisible}"/>
+                            Visibility="{Binding Source={StaticResource vm}, Path=IsVisible}">
+                            <interactiv:Interaction.Triggers>
+                                <interactiv:EventTrigger EventName="LostFocus">
+                                    <interactiv:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=StopEditingCommand}"
+                                                                    CommandParameter="{Binding}"/>
+                                </interactiv:EventTrigger>
+                            </interactiv:Interaction.Triggers>
 
+                        </TextBox>
 
                     </Grid>
                 </DataTemplate>
@@ -67,6 +73,7 @@
         
         <ListView DockPanel.Dock="Left"
                   Width="200"
+                   SelectedValue="{Binding SelectedNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding Notes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -101,6 +108,8 @@
                           Width="50"
                           IsEditable="True"
                           TextBoxBase.TextChanged="fontSizeComboBox_TextChanged"/>
+                <Button Content="Save"
+                        Click="saveButton_Click"/>
             </ToolBar>
         </ToolBarTray>
         

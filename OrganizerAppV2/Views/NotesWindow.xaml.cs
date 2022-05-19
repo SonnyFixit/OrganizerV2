@@ -10,7 +10,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using System.IO;
+using System.Linq;
+using OrganizerAppV2.ViewModels;
+using OrganizerAppV2.ViewModels.Helpers;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 
@@ -21,11 +24,36 @@ namespace OrganizerAppV2.Views
     /// </summary>
     public partial class NotesWindow : Window
     {
+
+        private NotesVM VM;
+
         public NotesWindow()
         {
             InitializeComponent();
+
+            VM = Resources["vm"] as NotesVM;
+            VM.SelectedNoteChanged += VM_SelectedNoteChanged;
+
         }
-        
+
+        private void VM_SelectedNoteChanged(object sender, EventArgs e)
+        {
+            contentRichTextBox.Document.Blocks.Clear();
+
+            if (VM.SelectedNote != null)
+            {
+                if (!string.IsNullOrEmpty(VM.SelectedNote.FileLocation))
+                {
+                    FileStream fileStream = new FileStream(VM.SelectedNote.FileLocation, FileMode.Open);
+                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    contents.Load(fileStream, DataFormats.Rtf);
+                }
+
+            }
+
+           
+        }
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -154,6 +182,20 @@ namespace OrganizerAppV2.Views
             {
                 contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
             }
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{VM.SelectedNote.Id}.rtf");
+            VM.SelectedNote.FileLocation = rtfFile;
+            DatabaseHelper.Update(VM.SelectedNote);
+
+            FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
+            var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+            contents.Save(fileStream, DataFormats.Rtf);
+
+
+            
         }
 
 
