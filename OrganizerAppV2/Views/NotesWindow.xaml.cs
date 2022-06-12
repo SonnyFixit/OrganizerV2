@@ -34,6 +34,12 @@ namespace OrganizerAppV2.Views
             VM = Resources["vm"] as NotesVM;
             VM.SelectedNoteChanged += VM_SelectedNoteChanged;
 
+            List<double> fontSizes = new List<double> { 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32 };
+            fontSizeComboBox.ItemsSource = fontSizes;
+
+            var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
+            fontFamilyComboBox.ItemsSource = fontFamilies;
+            
         }
 
         private void VM_SelectedNoteChanged(object sender, EventArgs e)
@@ -47,6 +53,8 @@ namespace OrganizerAppV2.Views
                     FileStream fileStream = new FileStream(VM.SelectedNote.FileLocation, FileMode.Open);
                     var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
                     contents.Load(fileStream, DataFormats.Rtf);
+
+                    fileStream.Close();
                 }
 
             }
@@ -182,6 +190,8 @@ namespace OrganizerAppV2.Views
             {
                 contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
             }
+
+          
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -194,8 +204,8 @@ namespace OrganizerAppV2.Views
             var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
             contents.Save(fileStream, DataFormats.Rtf);
 
+            fileStream.Close();
 
-            
         }
 
 
